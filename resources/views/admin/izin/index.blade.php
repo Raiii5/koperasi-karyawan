@@ -1,0 +1,214 @@
+@extends('layouts.admin')
+
+@section('title', 'Pengajuan Izin Kerja')
+@section('page-title', 'Pengajuan Izin Kerja')
+
+@section('content')
+
+@if ($izins->count())
+
+    {{-- Desktop / Tablet Table --}}
+    <div class="hidden overflow-hidden rounded-3xl bg-white shadow-sm shadow-slate-200 md:block">
+        <div class="overflow-x-auto">
+            <table class="min-w-[1050px] w-full divide-y divide-slate-200 text-sm">
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th class="px-6 py-4 text-left font-semibold text-slate-600">Karyawan</th>
+                        <th class="px-6 py-4 text-left font-semibold text-slate-600">Jenis Izin</th>
+                        <th class="px-6 py-4 text-left font-semibold text-slate-600">Periode</th>
+                        <th class="px-6 py-4 text-left font-semibold text-slate-600">Alasan</th>
+                        <th class="px-6 py-4 text-left font-semibold text-slate-600">Status</th>
+                        <th class="px-6 py-4 text-left font-semibold text-slate-600">Lampiran</th>
+                        <th class="px-6 py-4 text-left font-semibold text-slate-600">Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-200 bg-white">
+                    @foreach ($izins as $izin)
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-6 py-4 font-semibold text-slate-900">
+                                {{ $izin->karyawan->nama ?? '-' }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                {{ $izin->jenis_izin }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                {{ $izin->tanggal_mulai }} - {{ $izin->tanggal_selesai }}
+                            </td>
+
+                            <td class="px-6 py-4 max-w-xs text-slate-600">
+                                <div class="max-h-12 overflow-hidden">
+                                    {{ $izin->alasan ?? '-' }}
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold
+                                    {{ $izin->status === 'Disetujui'
+                                        ? 'bg-emerald-100 text-emerald-700'
+                                        : ($izin->status === 'Ditolak'
+                                            ? 'bg-rose-100 text-rose-700'
+                                            : 'bg-amber-100 text-amber-700') }}">
+                                    {{ $izin->status }}
+                                </span>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                @if ($izin->lampiran)
+                                    <a href="{{ asset('storage/' . $izin->lampiran) }}"
+                                       target="_blank"
+                                       class="inline-flex rounded-xl bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-100">
+                                        Lihat Berkas
+                                    </a>
+                                @else
+                                    <span class="text-sm text-slate-400">Tidak ada</span>
+                                @endif
+                            </td>
+
+                            <td class="px-6 py-4">
+                                @if ($izin->status === 'Menunggu')
+                                    <div class="flex flex-wrap gap-2">
+                                        <a href="/admin/izin/{{ $izin->id }}/approve"
+                                           data-confirm="Yakin ingin menyetujui pengajuan izin ini?"
+                                           data-confirm-title="Setujui Pengajuan Izin"
+                                           data-confirm-button="Ya, Setujui"
+                                           data-confirm-type="success"
+                                           class="rounded-2xl bg-emerald-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700">
+                                            Approve
+                                        </a>
+
+                                        <a href="/admin/izin/{{ $izin->id }}/reject"
+                                           data-confirm="Yakin ingin menolak pengajuan izin ini?"
+                                           data-confirm-title="Tolak Pengajuan Izin"
+                                           data-confirm-button="Ya, Tolak"
+                                           data-confirm-type="danger"
+                                           class="rounded-2xl bg-rose-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-rose-700">
+                                            Reject
+                                        </a>
+                                    </div>
+                                @else
+                                    <span class="text-sm text-slate-500">Selesai</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- Mobile Cards --}}
+    <div class="grid gap-3 md:hidden">
+        @foreach ($izins as $izin)
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200">
+
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Karyawan
+                        </p>
+
+                        <h3 class="mt-1 text-lg font-bold text-slate-900">
+                            {{ $izin->karyawan->nama ?? '-' }}
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            {{ $izin->jenis_izin }}
+                        </p>
+                    </div>
+
+                    <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold
+                        {{ $izin->status === 'Disetujui'
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : ($izin->status === 'Ditolak'
+                                ? 'bg-rose-100 text-rose-700'
+                                : 'bg-amber-100 text-amber-700') }}">
+                        {{ $izin->status }}
+                    </span>
+                </div>
+
+                <div class="mt-4 grid grid-cols-1 gap-3">
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Periode Izin
+                        </p>
+
+                        <p class="mt-1 text-sm font-semibold text-slate-800">
+                            {{ $izin->tanggal_mulai }} - {{ $izin->tanggal_selesai }}
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Alasan
+                        </p>
+
+                        <p class="mt-1 text-sm text-slate-600">
+                            {{ $izin->alasan ?? '-' }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Lampiran
+                        </p>
+
+                        <div class="mt-2">
+                            @if ($izin->lampiran)
+                                <a href="{{ asset('storage/' . $izin->lampiran) }}"
+                                   target="_blank"
+                                   class="inline-flex rounded-xl bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-100">
+                                    Lihat Berkas
+                                </a>
+                            @else
+                                <span class="text-sm text-slate-400">Tidak ada</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div>
+                        @if ($izin->status === 'Menunggu')
+                            <div class="flex flex-wrap gap-2">
+                                <a href="/admin/izin/{{ $izin->id }}/approve"
+                                   data-confirm="Yakin ingin menyetujui pengajuan izin ini?"
+                                   data-confirm-title="Setujui Pengajuan Izin"
+                                   data-confirm-button="Ya, Setujui"
+                                   data-confirm-type="success"
+                                   class="rounded-2xl bg-emerald-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700">
+                                    Approve
+                                </a>
+
+                                <a href="/admin/izin/{{ $izin->id }}/reject"
+                                   data-confirm="Yakin ingin menolak pengajuan izin ini?"
+                                   data-confirm-title="Tolak Pengajuan Izin"
+                                   data-confirm-button="Ya, Tolak"
+                                   data-confirm-type="danger"
+                                   class="rounded-2xl bg-rose-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-rose-700">
+                                    Reject
+                                </a>
+                            </div>
+                        @else
+                            <span class="inline-flex rounded-2xl bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-500">
+                                Pengajuan selesai diproses
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+            </div>
+        @endforeach
+    </div>
+
+@else
+
+    <div class="rounded-3xl bg-white px-6 py-10 text-center text-sm text-slate-500 shadow-sm shadow-slate-200">
+        Belum ada pengajuan izin.
+    </div>
+
+@endif
+
+@endsection
