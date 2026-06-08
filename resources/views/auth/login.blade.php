@@ -82,34 +82,6 @@
         </button>
 
     </form>
-
-    <!-- Demo Account -->
-    <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-
-        <p class="mb-3 font-semibold text-slate-900">
-            Akun Demo
-        </p>
-
-        <div class="space-y-2 text-sm text-slate-600">
-
-            <div class="flex items-center justify-between rounded-xl bg-white px-3 py-2">
-                <span>Admin</span>
-                <span class="font-semibold text-slate-900">
-                    admin / admin123
-                </span>
-            </div>
-
-            <div class="flex items-center justify-between rounded-xl bg-white px-3 py-2">
-                <span>Karyawan</span>
-                <span class="font-semibold text-slate-900">
-                    Nama Karyawan / Nama karyawan123
-                </span>
-            </div>
-
-        </div>
-
-    </div>
-
 </div>
 
 @endsection

@@ -25,9 +25,10 @@
     {{-- Desktop / Tablet Table --}}
     <div class="hidden overflow-hidden rounded-3xl bg-white shadow-sm shadow-slate-200 md:block">
         <div class="overflow-x-auto">
-            <table class="min-w-[950px] w-full divide-y divide-slate-200 text-sm">
+            <table class="min-w-[1100px] w-full divide-y divide-slate-200 text-sm">
                 <thead class="bg-slate-50">
                     <tr>
+                        <th class="px-6 py-4 text-left font-semibold text-slate-600">Tanggal Pengajuan</th>
                         <th class="px-6 py-4 text-left font-semibold text-slate-600">Jenis</th>
                         <th class="px-6 py-4 text-left font-semibold text-slate-600">Periode</th>
                         <th class="px-6 py-4 text-left font-semibold text-slate-600">Alasan</th>
@@ -40,6 +41,17 @@
                     @foreach ($izins as $izin)
                         <tr class="hover:bg-slate-50">
 
+                            <td class="px-6 py-4">
+                                <div>
+                                    <p class="font-semibold text-slate-800">
+                                        {{ $izin->created_at ? $izin->created_at->format('d-m-Y') : '-' }}
+                                    </p>
+                                    <p class="text-xs text-slate-400">
+                                        {{ $izin->created_at ? $izin->created_at->format('H:i') : '-' }} WIB
+                                    </p>
+                                </div>
+                            </td>
+
                             <td class="px-6 py-4 font-semibold text-slate-900">
                                 {{ $izin->jenis_izin }}
                             </td>
@@ -50,7 +62,7 @@
 
                             <td class="px-6 py-4 max-w-xs text-slate-600">
                                 <div class="max-h-12 overflow-hidden">
-                                    {{ $izin->alasan }}
+                                    {{ $izin->alasan ?? '-' }}
                                 </div>
                             </td>
 
@@ -89,6 +101,16 @@
         @foreach ($izins as $izin)
             <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200">
 
+                <div class="mb-4 rounded-2xl bg-slate-50 p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        Tanggal Pengajuan
+                    </p>
+
+                    <p class="mt-1 text-sm font-semibold text-slate-800">
+                        {{ $izin->created_at ? $izin->created_at->format('d-m-Y H:i') : '-' }} WIB
+                    </p>
+                </div>
+
                 <div class="flex items-start justify-between gap-3">
 
                     <div>
@@ -122,7 +144,7 @@
                     </p>
 
                     <p class="mt-1 text-sm text-slate-600">
-                        {{ $izin->alasan }}
+                        {{ $izin->alasan ?? '-' }}
                     </p>
                 </div>
 
